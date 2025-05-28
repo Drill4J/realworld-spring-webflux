@@ -1,0 +1,156 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.5.4</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.realworld</groupId>
+    <artifactId>realworld-spring-webflux</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <java.version>11</java.version>
+        <spring.boot.version>2.5.4</spring.boot.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>sonatype-central</id>
+            <url>https://central.sonatype.com/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.2</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.2</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>com.epam.drill.integration</groupId>
+                <artifactId>drill-maven-plugin</artifactId>
+                <version>0.1.7</version>
+                <configuration>
+                    <groupId>realworld</groupId>
+                    <appId>spring-webflux</appId>
+                    <apiUrl>${DRILL_API_URL}</apiUrl>
+                    <apiKey>${DRILL_API_KEY}</apiKey>
+
+                    <packagePrefixes>com/realworld</packagePrefixes>
+                    <testAgent>
+                        <version>0.23.6</version>                        
+                    </testAgent>
+                    <appAgent>
+                        <version>0.9.7</version>
+                    </appAgent>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>enableTestAgent</goal>
+                            <goal>enableAppAgent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <includes>
+<!--                        <include>**/repository/*.Test.java</include>-->
+                    </includes>
+<!--                    <argLine>-agentpath:C:\projects\epam\drill4j\realworld-spring-webflux\build\drill\testAgent\agent-mingwX64-0.23.0-beta.4\mingwX64-0.23.0-beta.4\drill_autotestAgent.dll=drillInstallationDir=C:\projects\epam\drill4j\realworld-spring-webflux\build\drill\testAgent\agent-mingwX64-0.23.0-beta.4\mingwX64-0.23.0-beta.4,drillApiUrl=http://localhost:8090/api,drillApiKey=4_e10d5e0cc385be8c698c29b8208bf0c71938f5378e8479156c89a1751a33c54c,groupId=realworld,logLevel=INFO,devToolsProxyAddress=http://localhost:9090 -agentpath:C:\projects\epam\drill4j\realworld-spring-webflux\build\drill\appAgent\agent-mingwX64-0.9.0-beta.3\mingwX64-0.9.0-beta.3\drill_agent.dll=drillInstallationDir=C:\projects\epam\drill4j\realworld-spring-webflux\build\drill\appAgent\agent-mingwX64-0.9.0-beta.3\mingwX64-0.9.0-beta.3,drillApiUrl=http://localhost:8090/api,drillApiKey=4_e10d5e0cc385be8c698c29b8208bf0c71938f5378e8479156c89a1751a33c54c,groupId=realworld,logLevel=INFO,appId=spring-webflux,packagePrefixes=com/realworld</argLine>-->
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>
