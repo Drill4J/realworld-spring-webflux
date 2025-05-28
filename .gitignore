@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Ignore Maven target directory and its classes
+/target/
+!/target/classes/
+!/target/test-classes/
