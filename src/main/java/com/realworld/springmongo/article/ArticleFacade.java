@@ -68,7 +68,7 @@ public class ArticleFacade {
     }
 
     public Mono<ArticleView> updateArticle(String slug, UpdateArticleRequest request, User currentUser) {
-        System.out.println("update article");
+        System.out.println("update article 111");
         return articleRepository.findBySlugOrFail(slug)
                 .map(article -> updateArticle(request, currentUser, article));
     }
