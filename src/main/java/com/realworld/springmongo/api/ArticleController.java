@@ -29,7 +29,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<ArticleViewWrapper> createArticle(@RequestBody CreateArticleRequestWrapper request) {
+    public Mono<ArticleViewWrapper> createArticle(@RequestBody CreateArticleRequestWrapper request) {                    
         return userSessionProvider.getCurrentUserOrEmpty()
                 .flatMap(currentUser -> articleFacade.createArticle(request.getContent(), currentUser))
                 .map(ArticleViewWrapper::new);
