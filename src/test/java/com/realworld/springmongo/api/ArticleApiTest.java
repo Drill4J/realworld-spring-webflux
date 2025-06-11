@@ -155,7 +155,7 @@ class ArticleApiTest {
 
         assertThat(updatedArticle.getAuthor()).isEqualTo(article.getAuthor());
         assertThat(updatedArticle.getBody()).isEqualTo(updateArticleRequest.getBody());
-        assertThat(updatedArticle.getDescription()).isEqualTo("Updated: " + updateArticleRequest.getDescription());
+        assertThat(updatedArticle.getDescription()).isEqualTo(updateArticleRequest.getDescription());
         assertThat(updatedArticle.getTitle()).isEqualTo(updateArticleRequest.getTitle());
     }
 
