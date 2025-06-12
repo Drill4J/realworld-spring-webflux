@@ -103,6 +103,10 @@ public class ArticleFacade {
         return commentService.getComments(slug, user);
     }
 
+    public Mono<MultipleCommentsView> getComments(String slug, Optional<User> user, int offset, int limit) {
+        return commentService.getComments(slug, user, offset, limit);
+    }
+
     public Mono<ArticleView> favoriteArticle(String slug, User currentUser) {
         return articleRepository.findBySlug(slug)
                 .map(article -> {
