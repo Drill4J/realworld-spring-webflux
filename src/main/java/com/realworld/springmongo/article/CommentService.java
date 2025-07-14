@@ -49,6 +49,16 @@ class CommentService {
                 });
     }
 
+    public Mono<MultipleCommentsView> getComments(String slug, Optional<User> user, int offset, int limit) {
+        return articleRepository.findBySlug(slug)
+                .zipWhen(article -> userRepository.findById(article.getAuthorId()))
+                .map(tuple -> {
+                    var article = tuple.getT1();
+                    var author = tuple.getT2();
+                    return getComments(user, article, author, offset, limit);
+                });
+    }
+
     private Mono<Void> deleteComment(Article article, Comment comment, User user) {
         if (!comment.isAuthor(user)) {
             return Mono.error(new InvalidRequestException("Comment", "only author can delete comment"));
@@ -73,5 +83,18 @@ class CommentService {
                 .map(comment -> CommentView.toCommentView(comment, authorProfile))
                 .collect(Collectors.toList());
         return MultipleCommentsView.of(commentViews);
+    }
+
+    private MultipleCommentsView getComments(Optional<User> user, Article article, User author, int offset, int limit) {
+        var comments = article.getComments();
+        var authorProfile = user
+                .map(viewer -> toProfileViewForViewer(author, viewer))
+                .orElse(toUnfollowedProfileView(author));
+        var pagedComments = comments.stream()
+                .skip(offset)
+                .limit(limit)
+                .map(comment -> CommentView.toCommentView(comment, authorProfile))
+                .collect(Collectors.toList());
+        return MultipleCommentsView.of(pagedComments);
     }
 }
