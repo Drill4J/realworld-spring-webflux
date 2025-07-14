@@ -74,7 +74,10 @@ drill {
     groupId = "realworld"
     appId = "spring-webflux"
     packagePrefixes = ["com/realworld"]
-
+    baseline {
+        searchStrategy = "SEARCH_BY_MERGE_BASE"
+        targetRef = "main"
+    }
     enableTestRecommendations {
         enabled = false
     }
