@@ -148,7 +148,8 @@ class ArticleApiTest {
         var updateArticleRequest = new UpdateArticleRequest()
                 .setBody("new body")
                 .setDescription("new description")
-                .setTitle("new title");
+                .setTitle("new title")
+                .setReason("test update reason");
 
         var updatedArticle = articleApi.updateArticle(slug, updateArticleRequest, user.getToken());
         assert updatedArticle != null;
