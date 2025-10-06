@@ -113,7 +113,7 @@
             <plugin>
                 <groupId>com.epam.drill.integration</groupId>
                 <artifactId>drill-maven-plugin</artifactId>
-                <version>0.1.7</version>
+                <version>0.1.11</version>
                 <configuration>
                     <groupId>realworld</groupId>
                     <appId>spring-webflux</appId>
@@ -122,10 +122,10 @@
 
                     <packagePrefixes>com/realworld</packagePrefixes>
                     <testAgent>
-                        <version>0.23.6</version>                        
+                        <version>0.23.10</version>
                     </testAgent>
                     <appAgent>
-                        <version>0.9.7</version>
+                        <version>0.9.12</version>
                     </appAgent>
                 </configuration>
                 <executions>
