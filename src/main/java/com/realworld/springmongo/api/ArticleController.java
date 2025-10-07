@@ -29,8 +29,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<ArticleViewWrapper> createArticle(@RequestBody CreateArticleRequestWrapper request) {
-        System.out.println("change1");
+    public Mono<ArticleViewWrapper> createArticle(@RequestBody CreateArticleRequestWrapper request) {                    
         return userSessionProvider.getCurrentUserOrEmpty()
                 .flatMap(currentUser -> articleFacade.createArticle(request.getContent(), currentUser))
                 .map(ArticleViewWrapper::new);
@@ -81,10 +80,14 @@ public class ArticleController {
 
 
     @GetMapping("/articles/{slug}/comments")
-    public Mono<MultipleCommentsView> getComments(@PathVariable String slug) {
+    public Mono<MultipleCommentsView> getComments(
+            @PathVariable String slug,
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "20") int limit
+    ) {
         return userSessionProvider.getCurrentUserOrEmpty()
-                .flatMap(currentUser -> articleFacade.getComments(slug, Optional.of(currentUser)))
-                .switchIfEmpty(articleFacade.getComments(slug, Optional.empty()));
+                .flatMap(currentUser -> articleFacade.getComments(slug, Optional.ofNullable(currentUser), offset, limit))
+                .switchIfEmpty(articleFacade.getComments(slug, Optional.empty(), offset, limit));
     }
 
     @PostMapping("/articles/{slug}/comments")

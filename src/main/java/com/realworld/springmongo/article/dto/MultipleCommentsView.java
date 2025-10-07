@@ -13,9 +13,11 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MultipleCommentsView {
     List<CommentView> comments = Collections.emptyList();
+    int commentsCount;
 
     public static MultipleCommentsView of(List<CommentView> comments) {
         return new MultipleCommentsView()
-                .setComments(comments);
+                .setComments(comments)
+                .setCommentsCount(comments.size());
     }
 }

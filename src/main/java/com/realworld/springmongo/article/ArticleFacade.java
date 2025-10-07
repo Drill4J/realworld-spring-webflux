@@ -31,10 +31,9 @@ public class ArticleFacade {
                 .map(TagListView::of);
     }
 
-    public Mono<ArticleView> createArticle(CreateArticleRequest request, User author) {
-        System.out.println("foo");
-        if (author.getId().toString() == "123") {
-            System.out.println("article created by admin123");
+    public Mono<ArticleView> createArticle(CreateArticleRequest request, User author) {        
+        if (author.getId().toString() == "admin") {
+            System.out.println("article created by admin");
         }
         var id = UUID.randomUUID().toString();
         var newArticle = request.toArticle(id, author.getId());
@@ -104,6 +103,10 @@ public class ArticleFacade {
         return commentService.getComments(slug, user);
     }
 
+    public Mono<MultipleCommentsView> getComments(String slug, Optional<User> user, int offset, int limit) {
+        return commentService.getComments(slug, user, offset, limit);
+    }
+
     public Mono<ArticleView> favoriteArticle(String slug, User currentUser) {
         return articleRepository.findBySlug(slug)
                 .map(article -> {
@@ -124,13 +127,16 @@ public class ArticleFacade {
         if (!article.isAuthor(currentUser)) {
             throw new InvalidRequestException("Article", "only author can update article");
         }
+        if (request.getReason() == null || request.getReason().isEmpty()) {
+            throw new InvalidRequestException("Article", "reason is required for update");
+        }
 
         ofNullable(request.getBody())
                 .ifPresent(article::setBody);
         ofNullable(request.getDescription())
-                .ifPresent(article::setDescription);
+            .ifPresent(article::setDescription);
         ofNullable(request.getTitle())
-                .ifPresent(article::setTitle);
+                .ifPresent(article::setTitle);        
         return ArticleView.ofOwnArticle(article, currentUser);
     }
 }
