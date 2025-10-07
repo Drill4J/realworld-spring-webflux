@@ -118,6 +118,7 @@ jobs:
   reportByPR:
     if: github.event_name == 'pull_request'
     needs: unitTests
+    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -137,6 +138,7 @@ jobs:
   reportByBranch:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     needs: unitTests
+    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
