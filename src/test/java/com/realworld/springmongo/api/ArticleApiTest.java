@@ -153,6 +153,7 @@ class ArticleApiTest {
         var updatedArticle = articleApi.updateArticle(slug, updateArticleRequest, user.getToken());
         assert updatedArticle != null;
 
+                .setReason("updating content");
         assertThat(updatedArticle.getAuthor()).isEqualTo(article.getAuthor());
         assertThat(updatedArticle.getBody()).isEqualTo(updateArticleRequest.getBody());
         assertThat(updatedArticle.getDescription()).isEqualTo(updateArticleRequest.getDescription());
