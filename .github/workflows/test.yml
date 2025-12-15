@@ -118,6 +118,7 @@ jobs:
   reportByPR:
     if: github.event_name == 'pull_request'
     needs: unitTests
+    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
