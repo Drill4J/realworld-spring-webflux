@@ -127,7 +127,7 @@ public class ArticleFacade {
         ofNullable(request.getBody())
                 .ifPresent(article::setBody);
         ofNullable(request.getDescription())
-            .ifPresent(article::setDescription);
+                .ifPresent(article::setDescription);
         ofNullable(request.getTitle())
                 .ifPresent(article::setTitle);
         return ArticleView.ofOwnArticle(article, currentUser);
