@@ -149,6 +149,9 @@ class ArticleApiTest {
                 .setBody("new body")
                 .setDescription("new description")
                 .setTitle("new title");
+                
+        // reason is required by the UpdateArticleRequest validation
+        updateArticleRequest.setReason("update reason");
 
         var updatedArticle = articleApi.updateArticle(slug, updateArticleRequest, user.getToken());
         assert updatedArticle != null;
