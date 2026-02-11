@@ -149,6 +149,9 @@ class ArticleApiTest {
                 .setBody("new body")
                 .setDescription("new description")
                 .setTitle("new title");
+                
+        // reason is required by the updated API validation
+        updateArticleRequest.setReason("update: fix typo");
 
         var updatedArticle = articleApi.updateArticle(slug, updateArticleRequest, user.getToken());
         assert updatedArticle != null;
