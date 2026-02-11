@@ -131,10 +131,13 @@ class ArticleApiTest {
         var article = articleApi.createArticle(ArticleSamples.sampleCreateArticleRequest()
                 .setTitle("should-update-article"), user.getToken());
         assert article != null;
+        // UpdateArticleRequest now requires a non-empty reason (see ArticleFacade change).
+        // Provide a reason so the test aligns with the new validation behavior.
         var updateArticleRequest = new UpdateArticleRequest()
                 .setBody("new body")
                 .setDescription("new description")
-                .setTitle("new title");
+                .setTitle("new title")
+                .setReason("test update");
 
         var updatedArticle = articleApi.updateArticle(article.getSlug(), updateArticleRequest, user.getToken());
         assert updatedArticle != null;
@@ -251,4 +254,3 @@ class ArticleApiTest {
         assert article2 != null;
         return new ArticlesAndUsers(List.of(article1, article2), List.of(user1, user2));
     }
-}
