@@ -136,6 +136,9 @@ class ArticleApiTest {
                 .setDescription("new description")
                 .setTitle("new title");
 
+        // reason is required for update
+        updateArticleRequest.setReason("update reason");
+
         var updatedArticle = articleApi.updateArticle(article.getSlug(), updateArticleRequest, user.getToken());
         assert updatedArticle != null;
 
@@ -251,4 +254,3 @@ class ArticleApiTest {
         assert article2 != null;
         return new ArticlesAndUsers(List.of(article1, article2), List.of(user1, user2));
     }
-}
