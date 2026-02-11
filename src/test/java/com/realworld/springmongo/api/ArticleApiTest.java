@@ -145,10 +145,13 @@ class ArticleApiTest {
         var article = articleApi.createArticle(ArticleSamples.sampleCreateArticleRequest(), user.getToken());
         assert article != null;
         var slug = article.getSlug();
+        // UpdateArticleRequest now requires a non-empty reason for auditing purposes.
+        // Set a reason so the request passes validation introduced in ArticleFacade.
         var updateArticleRequest = new UpdateArticleRequest()
                 .setBody("new body")
                 .setDescription("new description")
-                .setTitle("new title");
+                .setTitle("new title")
+                .setReason("test update");
 
         var updatedArticle = articleApi.updateArticle(slug, updateArticleRequest, user.getToken());
         assert updatedArticle != null;
