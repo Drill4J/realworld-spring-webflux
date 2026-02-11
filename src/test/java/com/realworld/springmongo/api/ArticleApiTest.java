@@ -1,5 +1,11 @@
 package com.realworld.springmongo.api;
 
+/*
+ * Test update: The production UpdateArticleRequest and ArticleFacade now require a non-empty
+ * 'reason' field for article updates. The failing test didn't set this field, causing
+ * validation to fail. This test was updated to include a reason when updating an article.
+ */
+
 import com.realworld.springmongo.article.dto.ArticleView;
 import com.realworld.springmongo.article.dto.CreateArticleRequest;
 import com.realworld.springmongo.article.dto.CreateCommentRequest;
@@ -149,6 +155,8 @@ class ArticleApiTest {
                 .setBody("new body")
                 .setDescription("new description")
                 .setTitle("new title");
+        // new required field in UpdateArticleRequest
+        updateArticleRequest.setReason("update reason");
 
         var updatedArticle = articleApi.updateArticle(slug, updateArticleRequest, user.getToken());
         assert updatedArticle != null;
