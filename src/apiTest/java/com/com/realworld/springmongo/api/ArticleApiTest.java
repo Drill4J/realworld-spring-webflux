@@ -134,7 +134,8 @@ class ArticleApiTest {
         var updateArticleRequest = new UpdateArticleRequest()
                 .setBody("new body")
                 .setDescription("new description")
-                .setTitle("new title");
+                .setTitle("new title")
+                .setReason("updated for tests");
 
         var updatedArticle = articleApi.updateArticle(article.getSlug(), updateArticleRequest, user.getToken());
         assert updatedArticle != null;
@@ -251,4 +252,3 @@ class ArticleApiTest {
         assert article2 != null;
         return new ArticlesAndUsers(List.of(article1, article2), List.of(user1, user2));
     }
-}
