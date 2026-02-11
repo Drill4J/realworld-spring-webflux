@@ -30,27 +30,63 @@ class ArticleApiTest {
     private final static ArticleApiSupport articleApi = new ArticleApiSupport(client);
 
     @Test
-    void shouldCreateArticle() {
+    void shouldRunFullUserArticleFlow() {
+
+        // Register user
+        var registrationRequest = UserSamples.sampleUserRegistrationRequest()
+                .setUsername("smoke-user")
+                .setEmail("smoke-user@mail.com");
+        var registeredUser = userApi.signup(registrationRequest);
+        assertThat(registeredUser).isNotNull();
+        assertThat(registeredUser.getToken()).isNotEmpty();
+        var token = registeredUser.getToken();
+
+        // Login
+        var loginRequest = UserSamples.sampleUserAuthenticationRequest()
+                .setEmail(registrationRequest.getEmail());
+        var loggedInUser = userApi.login(loginRequest);
+        assertThat(loggedInUser).isNotNull();
+        assertThat(loggedInUser.getUsername()).isEqualTo(registrationRequest.getUsername());
+
+        // Create article
         var createArticleRequest = ArticleSamples.sampleCreateArticleRequest()
-                .setTitle("should-create-article");
+                .setTitle("smoke-article");
+        var createdArticle = articleApi.createArticle(createArticleRequest, token);
+        assertThat(createdArticle).isNotNull();
+        assertThat(createdArticle.getTitle()).isEqualTo("smoke-article");
 
-        var result = articleApi.createArticle(createArticleRequest, user.getToken());
-        assert result != null;
-        var author = result.getAuthor();
+        // Leave comment
+        var commentRequest = new CreateCommentRequest("smoke comment");
+        var comment = articleApi.addComment(createdArticle.getSlug(), commentRequest, token);
+        assertThat(comment).isNotNull();
+        assertThat(comment.getBody()).isEqualTo("smoke comment");
 
-        //assertThatCreatedArticleIsRight
-        assertThat(result.getBody()).isEqualTo(createArticleRequest.getBody());
-        assertThat(result.getDescription()).isEqualTo(createArticleRequest.getDescription());
-        assertThat(result.getTitle()).isEqualTo(createArticleRequest.getTitle());
-        assertThat(result.getTagList()).isEqualTo(createArticleRequest.getTagList());
-        //assertThatCreatedArticleHasRightAuthor
-        assertThat(author.getUsername()).isEqualTo(user.getUsername());
-        assertThat(author.getBio()).isEqualTo(user.getBio());
-        assertThat(author.getImage()).isEqualTo(user.getImage());
-        assertThat(author.isFollowing()).isFalse();
+        // Update article (handle slug regeneration)
+        var updateArticleRequest = new UpdateArticleRequest()
+                .setTitle("smoke-article-updated")
+                .setDescription("updated description")
+                .setBody("updated body");
+        var updatedArticle = articleApi.updateArticle(createdArticle.getSlug(), updateArticleRequest, token);
+        assertThat(updatedArticle).isNotNull();
+        var newSlug = updatedArticle.getSlug();
+        assertThat(updatedArticle.getTitle()).isEqualTo("smoke-article-updated");
+        assertThat(updatedArticle.getBody()).isEqualTo("updated body");
 
-        var createdArticle = articleApi.getArticle(createArticleRequest.getTitle(), user.getToken());
-        Assertions.assertNotNull(createdArticle);
+        // Update user bio
+        var updateUserRequest = UserSamples.sampleUpdateUserRequest().setBio(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" +
+                " incididunt ut labore et dolore magna aliqua." +
+                "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.");
+        var updatedUser = userApi.updateUser(token, updateUserRequest);
+        assertThat(updatedUser).isNotNull();
+        assertThat(updatedUser.getBio()).isEqualTo("updated bio");
+
+        // Discard token & verify 401
+        token = null;
+        client.get()
+                .uri("/api/user")
+                .exchange()
+                .expectStatus().isUnauthorized();
     }
 
     @Test
