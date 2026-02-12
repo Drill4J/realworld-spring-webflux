@@ -145,10 +145,14 @@ class ArticleApiTest {
         var article = articleApi.createArticle(ArticleSamples.sampleCreateArticleRequest(), user.getToken());
         assert article != null;
         var slug = article.getSlug();
+        // The UpdateArticleRequest in the application now requires a non-empty "reason" field
+        // (validation added in a recent change). Include a reason here to satisfy the
+        // new validation rule so the test updates the article successfully.
         var updateArticleRequest = new UpdateArticleRequest()
                 .setBody("new body")
                 .setDescription("new description")
-                .setTitle("new title");
+                .setTitle("new title")
+                .setReason("update for test");
 
         var updatedArticle = articleApi.updateArticle(slug, updateArticleRequest, user.getToken());
         assert updatedArticle != null;
