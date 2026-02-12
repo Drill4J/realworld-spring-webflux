@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Test Fix <dev@example.com>
+Date: Fri, 12 Feb 2026 00:00:00 +0000
+Subject: [PATCH] test: include required 'reason' in UpdateArticleRequest for update tests
+
+Root cause: UpdateArticleRequest gained a new required field 'reason' and
+ArticleFacade.updateArticle now validates it. Tests did not set this field,
+causing update to fail and return null. Fix: setReason in update request in
+tests to satisfy validation.
+
+---
+ src/test/java/com/realworld/springmongo/api/ArticleApiTest.java | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/test/java/com/realworld/springmongo/api/ArticleApiTest.java b/src/test/java/com/realworld/springmongo/api/ArticleApiTest.java
+index 719cddd..28d8cac 100644
+--- a/src/test/java/com/realworld/springmongo/api/ArticleApiTest.java
+@@ -148,7 +148,8 @@ class ArticleApiTest {
+         var updateArticleRequest = new UpdateArticleRequest()
+                 .setBody("new body")
+                 .setDescription("new description")
+-                .setTitle("new title");
++                .setTitle("new title")
++                .setReason("update reason");
+ 
+         var updatedArticle = articleApi.updateArticle(slug, updateArticleRequest, user.getToken());
+         assert updatedArticle != null;
+-- 
+2.39.2
