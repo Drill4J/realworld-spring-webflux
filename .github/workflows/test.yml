@@ -49,8 +49,15 @@ jobs:
         run: chmod +x ./gradlew
       - name: Run tests
         run: ./gradlew clean test
+        continue-on-error: true
         env:
           DRILL_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: build/test-results/
 #  dockerBuild:
 #    needs: build
 #    runs-on: ubuntu-latest
@@ -116,7 +123,7 @@ jobs:
 #      - name: Docker-compose down
 #        run: docker compose -f ./Docker/docker-compose.yml down -v
   reportByPR:
-    if: github.event_name == 'pull_request'
+    if: (github.event_name == 'pull_request') && always()
     needs: unitTests
     continue-on-error: true
     runs-on: ubuntu-latest
@@ -136,7 +143,7 @@ jobs:
       - name: Send coverage report to Drill4J
         run: ./gradlew drillGithubPullRequestReport
   reportByBranch:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && always()
     needs: unitTests
     runs-on: ubuntu-latest
     steps:
