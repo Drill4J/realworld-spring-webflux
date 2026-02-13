@@ -91,7 +91,8 @@ class ArticleApiTest {
         var updateArticleRequest = new UpdateArticleRequest()
                 .setTitle("smoke-article-updated")
                 .setDescription("updated description")
-                .setBody("updated body");
+                .setBody("updated body")
+                .setReason("test update");
         var updatedArticle = articleApi.updateArticle(createdArticle.getSlug(), updateArticleRequest, token);
         assertThat(updatedArticle).isNotNull();
         var newSlug = updatedArticle.getSlug();
@@ -210,7 +211,7 @@ class ArticleApiTest {
                 .setBody("new body")
                 .setDescription("new description")
                 .setTitle("new title");
-
+        updateArticleRequest.setReason("test update");
         var updatedArticle = articleApi.updateArticle(slug, updateArticleRequest, user.getToken());
         assert updatedArticle != null;
 

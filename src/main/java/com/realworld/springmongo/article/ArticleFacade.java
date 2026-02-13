@@ -120,6 +120,9 @@ public class ArticleFacade {
         if (!article.isAuthor(currentUser)) {
             throw new InvalidRequestException("Article", "only author can update article");
         }
+        if (request.getReason() == null || request.getReason().isEmpty()) {
+            throw new InvalidRequestException("Article", "reason is required for update");
+        }
 
         ofNullable(request.getBody())
                 .ifPresent(article::setBody);

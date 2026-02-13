@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Tests Fixer <devnull@example.com>
+Date: Fri, 13 Feb 2026 00:00:00 +0000
+Subject: [PATCH] tests: include required reason field for update article requests
+
+---
+ src/test/java/com/realworld/springmongo/api/ArticleApiTest.java | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/test/java/com/realworld/springmongo/api/ArticleApiTest.java b/src/test/java/com/realworld/springmongo/api/ArticleApiTest.java
+index 0000000..1111111 100644
+--- a/src/test/java/com/realworld/springmongo/api/ArticleApiTest.java
+@@
+-        var updateArticleRequest = new UpdateArticleRequest()
+-                .setTitle("smoke-article-updated")
+-                .setDescription("updated description")
+-                .setBody("updated body");
++        var updateArticleRequest = new UpdateArticleRequest()
++                .setTitle("smoke-article-updated")
++                .setDescription("updated description")
++                .setBody("updated body")
++                .setReason("test update");
+@@
+-        var updateArticleRequest = new UpdateArticleRequest()
+-                .setBody("new body")
+-                .setDescription("new description")
+-                .setTitle("new title");
+-
++        var updateArticleRequest = new UpdateArticleRequest()
++                .setBody("new body")
++                .setDescription("new description")
++                .setTitle("new title");
++        updateArticleRequest.setReason("test update");
