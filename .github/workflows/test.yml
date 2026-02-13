@@ -48,6 +48,7 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: Run tests
+        id: runTests
         run: ./gradlew clean test
         continue-on-error: true
         env:
@@ -58,6 +59,9 @@ jobs:
         with:
           name: test-results
           path: build/test-results/
+      - name: Fail job if tests failed
+        if: steps.runTests.outcome == 'failure'
+        run: exit 1
 #  dockerBuild:
 #    needs: build
 #    runs-on: ubuntu-latest
