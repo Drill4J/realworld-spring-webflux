@@ -25,7 +25,8 @@ public class UserApiSupport {
                 .exchange()
                 .expectBody(UserViewWrapper.class)
                 .returnResult();
-        return result.getResponseBody().getContent();
+        var body = result.getResponseBody();
+        return body != null ? body.getContent() : null;
     }
 
     public UserView currentUser(String token) {
