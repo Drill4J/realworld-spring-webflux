@@ -92,5 +92,8 @@ drill {
     enableAppAgent {
         enabled = true
         version = "0.9.15"
+        additionalParams = [
+                "classScanningEnabled": "false"
+        ]
     }
 }
