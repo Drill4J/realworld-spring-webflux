@@ -124,6 +124,42 @@ jobs:
 #          time: '10s'
 #      - name: Docker-compose down
 #        run: docker compose -f ./Docker/docker-compose.yml down -v
+  exportFailedTestsCsv:
+    needs: unitTests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Python dependencies
+        run: pip install lxml
+      - name: Convert JUnit XML to CSV (failed tests only)
+        run: |
+          import csv, glob, os
+          from lxml import etree
+
+          xml_files = glob.glob('build/test-results/test/*.xml')
+          output_file = 'failed-tests.csv'
+
+          with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
+              writer = csv.writer(csvfile)
+              writer.writerow(['class', 'method', 'message', 'stacktrace'])
+
+              for xml_file in xml_files:
+                  tree = etree.parse(xml_file)
+                  for testcase in tree.xpath('//testcase[failure]'):
+                      class_name = testcase.get('classname')
+                      method_name = testcase.get('name')
+                      failure = testcase.find('failure')
+                      message = failure.get('message', '').replace('\n','\\n')
+                      stacktrace = failure.text.strip().replace('\n','\\n') if failure.text else ''
+                      writer.writerow([class_name, method_name, message, stacktrace])
+
+          print(f"CSV generated: {output_file}")
+      - name: Upload CSV artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: failed-tests-csv
+          path: failed-tests.csv
   sendBuildInfo:
     if: always()
     needs: unitTests
