@@ -135,6 +135,9 @@ jobs:
       - name: Install Python dependencies
         run: pip install lxml
 
+      - name: List JUnit XML files
+        run: ls -l build/test-results/test/
+
       - name: Convert JUnit XML to CSV (failed tests only)
         run: |
           python3 - <<'EOF'
