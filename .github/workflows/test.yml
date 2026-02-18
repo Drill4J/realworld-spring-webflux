@@ -125,6 +125,7 @@ jobs:
 #      - name: Docker-compose down
 #        run: docker compose -f ./Docker/docker-compose.yml down -v
   exportFailedTestsCsv:
+    if: always()
     needs: unitTests
     runs-on: ubuntu-latest
     steps:
