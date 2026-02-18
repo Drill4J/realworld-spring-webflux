@@ -138,7 +138,7 @@ jobs:
           name: test-results
           path: build/test-results/
 
-      - name: List downloaded XML
+      - name: List downloaded XMLs
         run: ls -l build/test-results/
 
       - name: Install Python dependencies
