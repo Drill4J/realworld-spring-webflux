@@ -131,6 +131,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          path: build/test-results/
+
+      - name: List downloaded XML
+        run: ls -l build/test-results/
+
       - name: Install Python dependencies
         run: pip install lxml
       - name: Convert JUnit XML to CSV (failed tests only)
