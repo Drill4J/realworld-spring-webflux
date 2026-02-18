@@ -125,8 +125,8 @@ jobs:
 #      - name: Docker-compose down
 #        run: docker compose -f ./Docker/docker-compose.yml down -v
   exportFailedTestsCsv:
-    if: always()
     needs: unitTests
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -135,6 +135,7 @@ jobs:
         run: pip install lxml
       - name: Convert JUnit XML to CSV (failed tests only)
         run: |
+          python - <<'EOF'
           import csv, glob, os
           from lxml import etree
 
@@ -156,11 +157,13 @@ jobs:
                       writer.writerow([class_name, method_name, message, stacktrace])
 
           print(f"CSV generated: {output_file}")
+          EOF
       - name: Upload CSV artifact
         uses: actions/upload-artifact@v4
         with:
           name: failed-tests-csv
           path: failed-tests.csv
+
   sendBuildInfo:
     if: always()
     needs: unitTests
