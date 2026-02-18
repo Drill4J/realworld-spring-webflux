@@ -164,7 +164,8 @@ jobs:
                       failure = testcase.find('failure')
                       if failure is not None:
                           message = failure.get('message', '').replace('\n','\\n')
-                          stacktrace = failure.text.strip().replace('\n','\\n') if failure.text else ''
+                          stacktrace_lines = failure.text.strip().splitlines() if failure.text else []
+                          stacktrace = '\\n'.join(stacktrace_lines[:3])
                           writer.writerow([class_name, method_name, message, stacktrace])
 
           print(f"CSV generated: {output_file}")
