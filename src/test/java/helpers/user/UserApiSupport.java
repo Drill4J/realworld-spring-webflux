@@ -25,7 +25,13 @@ public class UserApiSupport {
                 .exchange()
                 .expectBody(UserViewWrapper.class)
                 .returnResult();
-        return result.getResponseBody().getContent();
+        var wrapper = result.getResponseBody();
+        if (wrapper == null) {
+            var content = result.getResponseBodyContent();
+            var status = result.getStatus();
+            throw new AssertionError("Expected response body for updateUser but got none. Status: " + status + ", body: " + (content == null ? "null" : new String(content)));
+        }
+        return wrapper.getContent();
     }
 
     public UserView currentUser(String token) {
