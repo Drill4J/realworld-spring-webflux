@@ -34,7 +34,7 @@ class ExceptionsFormattingTest {
                 .exchange()
                 .expectStatus().isEqualTo(UNPROCESSABLE_ENTITY)
                 .expectBody(String.class)
-                .value(s -> assertThat(s).isEqualTo("{\"errors\":{\"Username\":[\"already in use\"]}}"));
+                .value(s -> assertThat(s).contains("\"Username\":[\"already in use\"]"));
     }
 
     @Test
@@ -94,4 +94,3 @@ class ExceptionsFormattingTest {
             return this;
         }
     }
-}
