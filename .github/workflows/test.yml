@@ -131,12 +131,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Install Python dependencies
         run: pip install lxml
+
       - name: Convert JUnit XML to CSV (failed tests only)
         run: |
-          python - <<'EOF'
-          import csv, glob, os
+          python3 - <<'EOF'
+          import csv, glob
           from lxml import etree
 
           xml_files = glob.glob('build/test-results/test/*.xml')
@@ -147,23 +149,34 @@ jobs:
               writer.writerow(['class', 'method', 'message', 'stacktrace'])
 
               for xml_file in xml_files:
-                  tree = etree.parse(xml_file)
-                  for testcase in tree.xpath('//testcase[failure]'):
+                  try:
+                      tree = etree.parse(xml_file)
+                  except etree.XMLSyntaxError:
+                      continue
+
+                  testcases = tree.xpath('//testcase[failure or error]')
+                  for testcase in testcases:
                       class_name = testcase.get('classname')
                       method_name = testcase.get('name')
-                      failure = testcase.find('failure')
-                      message = failure.get('message', '').replace('\n','\\n')
-                      stacktrace = failure.text.strip().replace('\n','\\n') if failure.text else ''
+                      failure = testcase.find('failure') or testcase.find('error')
+                      message = (failure.get('message') or '').replace('\n','\\n')
+                      stacktrace = (failure.text or '').strip().replace('\n','\\n')
                       writer.writerow([class_name, method_name, message, stacktrace])
 
           print(f"CSV generated: {output_file}")
           EOF
+
       - name: Upload CSV artifact
         uses: actions/upload-artifact@v4
         with:
           name: failed-tests-csv
           path: failed-tests.csv
 
+      - name: Upload original JUnit XML reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-xml-reports
+          path: build/test-results/test/*.xml
   sendBuildInfo:
     if: always()
     needs: unitTests
