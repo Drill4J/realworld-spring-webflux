@@ -160,7 +160,7 @@ jobs:
                   tree = etree.parse(xml_file)
                   for testcase in tree.xpath('//testcase[failure]'):
                       class_name = testcase.get('classname', '')
-                      method_name = testcase.get('name', '')
+                      method_name = testcase.get('name', '').rstrip('()')
                       failure = testcase.find('failure')
                       if failure is not None:
                           message = failure.get('message', '').replace('\n','\\n')
