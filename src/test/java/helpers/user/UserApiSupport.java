@@ -18,14 +18,15 @@ public class UserApiSupport {
     }
 
     public UserView updateUser(String token, UpdateUserRequest updateUserRequest) {
-        var result = client.put()
+        // Controller now returns 204 No Content. Perform the update then fetch current user to obtain updated view.
+        client.put()
                 .uri("/api/user")
                 .header(HttpHeaders.AUTHORIZATION, TokenHelper.formatToken(token))
                 .bodyValue(new UpdateUserRequestWrapper(updateUserRequest))
                 .exchange()
-                .expectBody(UserViewWrapper.class)
-                .returnResult();
-        return result.getResponseBody().getContent();
+                .expectStatus().isNoContent();
+
+        return currentUser(token);
     }
 
     public UserView currentUser(String token) {
