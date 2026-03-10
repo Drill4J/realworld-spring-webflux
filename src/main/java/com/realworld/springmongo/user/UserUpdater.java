@@ -17,11 +17,18 @@ class UserUpdater {
 
     public Mono<User> updateUser(UpdateUserRequest request, User user) {
         ofNullable(request.getBio())
-                .ifPresent(user::setBio);
+                .ifPresent(bio -> {
+                    if (bio.length() <= 140) {
+                        user.setBio(bio);
+                    }
+                });
+
         ofNullable(request.getImage())
                 .ifPresent(user::setImage);
+
         ofNullable(request.getPassword())
                 .ifPresent(password -> updatePassword(password, user));
+
         return updateUsername(request, user)
                 .then(updateEmail(request, user))
                 .thenReturn(user);

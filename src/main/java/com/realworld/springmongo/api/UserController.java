@@ -45,9 +45,11 @@ public class UserController {
     }
 
     @PutMapping("/user")
-    public Mono<UserViewWrapper> updateUser(@RequestBody @Valid UpdateUserRequestWrapper request) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> updateUser(@RequestBody @Valid UpdateUserRequestWrapper request) {
         return userSessionProvider.getCurrentUserSessionOrEmpty()
-                .flatMap(it -> userFacade.updateUser(request.getContent(), it)).map(UserViewWrapper::new);
+                .flatMap(it -> userFacade.updateUser(request.getContent(), it))
+                .then();
     }
 
     @GetMapping("/profiles/{username}")
