@@ -18,4 +18,7 @@ public class UpdateArticleRequest {
 
     @NotBlankOrNull
     String body;
+
+    @NotBlankOrNull
+    String reason;
 }
