@@ -3,7 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'com.google.cloud.tools.jib' version '3.1.4'
-    id("com.epam.drill.integration.cicd") version "0.1.15-alpha.2"
+    id("com.epam.drill.integration.cicd") version "0.1.16"
 }
 
 group = 'com.realworld'
@@ -78,22 +78,15 @@ drill {
         searchStrategy = "SEARCH_BY_MERGE_BASE"
         targetRef = "main"
     }
-    enableTestRecommendations {
-        enabled = false
-    }
     github {
         it.token = System.getenv("DRILL_BOT_GITHUB_TOKEN")
     }
-
-    enableTestAgent {
-        enabled = true
-        version = "0.23.10"
+    agent {
+        version = "0.9.22"
     }
-    enableAppAgent {
-        enabled = true
-        version = "0.9.15"
-        additionalParams = [
-                "classScanningEnabled": "false"
-        ]
+    coverage()
+    testTracing()
+    classScanning {
+        beforeRun = true
     }
 }

@@ -113,7 +113,7 @@
             <plugin>
                 <groupId>com.epam.drill.integration</groupId>
                 <artifactId>drill-maven-plugin</artifactId>
-                <version>0.1.11</version>
+                <version>0.1.16</version>
                 <configuration>
                     <groupId>realworld</groupId>
                     <appId>spring-webflux</appId>
@@ -121,18 +121,27 @@
                     <apiKey>${DRILL_API_KEY}</apiKey>
 
                     <packagePrefixes>com/realworld</packagePrefixes>
-                    <testAgent>
-                        <version>0.23.10</version>
-                    </testAgent>
-                    <appAgent>
-                        <version>0.9.12</version>
-                    </appAgent>
+                    <agent>
+                        <version>0.9.22</version>
+                    </agent>
+                    <coverage>
+                        <enabled>true</enabled>
+                    </coverage>
+                    <testTracing>
+                        <enabled>true</enabled>
+                    </testTracing>
                 </configuration>
                 <executions>
                     <execution>
+                        <id>scan-app-classes-before-tests</id>
+                        <phase>process-test-classes</phase>
                         <goals>
-                            <goal>enableTestAgent</goal>
-                            <goal>enableAppAgent</goal>
+                            <goal>scanAppArchive</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>enableAgent</goal>
                         </goals>
                     </execution>
                 </executions>
